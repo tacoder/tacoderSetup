@@ -1,0 +1,101 @@
+## Customization
+# COLORS
+NOC="\[\e[0m\]"
+WHITE="\[[1m\]"
+BOLD="\[\e[1m\]"
+GREY="\[[2m\]"
+UNDERLINE="\[[4m\]"
+DEFACE="\[[9m\]"
+DARK="\[[30m\]"
+RED="\[[31m\]"
+GREEN="\[[32m\]"
+YELOW="\[[33m\]"
+BLUE="\[[34m\]"
+PINK="\[[35m\]"
+AZURE="\[[36m\]"
+BDARK="\[[40m\]"
+BRED="\[[41m\]"
+BGREEN="\[[42m\]"
+BYELOW="\[[43m\]"
+BBLUE="\[[44m\]"
+BPINK="\[[45m\]"
+BAZURE="\[[46m\]"
+BWHITE="\[[7m\]"
+HDARK="\[[90m\]"
+HRED="\[[91m\]"
+HGREEN="\[[92m\]"
+HYELOW="\[[93m\]"
+HBLUE="\[[94m\]"
+HPINK="\[[95m\]"
+HAZURE="\[[96m\]"
+
+
+function create_prompt {
+
+    if [[ "$USER" == "root" ]] ; then 
+        COLORPS=$NOC$RED$BOLD
+        PROMPT="$NOC$BOLD$RED#$NOC"
+    else
+        COLORPS=$NOC$GREEN$BOLD
+        PROMPT="$NOC$"
+    fi
+    gitpart=""
+    
+    if git ls-files ./ --error-unmatch >/dev/null 2>/dev/null ; then
+        stash=$(git stash list | wc -l)
+        mod=$(git status -s --porcelain | egrep -v "^\?\?"| grep -E "^.{0,1}[RM]"|wc -l)
+        add=$(git status -s --porcelain | egrep -v "^\?\?"| grep -E "^.{0,1}A"|wc -l)
+        del=$(git status -s --porcelain | egrep -v "^\?\?"| grep -E "^.{0,1}D"|wc -l)
+
+        # git submodules
+        if [ -e ./.gitmodules ] ; then 
+            submod=$(git submodule | wc -l)
+            submodule_info=" | ${HAZURE}SM: ${HYELOW}$submod$NOC"
+        else
+            submodule_info=""
+        fi
+
+        #git status local vs remote
+        status=$(git status | grep -e "^# Your branch is")
+
+        if echo $status | grep 'ahead' > /dev/null ; then
+            num=$(echo $status | grep -o "[0-9]*")
+            rstat=" ${AZURE}U:${HYELOW}->${HRED}$num$NOC"
+        elif echo $status | grep 'behind' > /dev/null ; then
+            num=$(echo $status | grep -o "[0-9]*")
+            rstat=" ${AZURE}U:${HYELOW}<-${HRED}$num$NOC"
+        else
+                rstat=""
+        fi
+
+
+
+        if [ $mod -gt 0 ] ; then 
+            mod="$HRED$mod$COLORPS"
+        else
+            mod="$NOC$WHITE$mod$COLORPS"
+        fi
+        if [ $add -gt 0 ] ; then 
+            add="$HRED$add$COLORPS"
+        else
+            add="$NOC$WHITE$add$COLORPS"
+        fi
+        if [ $del -gt 0 ] ; then 
+            del="$HRED$del$COLORPS"
+        else
+            del="$NOC$WHITE$del$COLORPS"
+        fi
+        if [ $stash -gt 0 ] ; then 
+            stash=" ${AZURE}S: $RED$stash$COLORPS"
+        else
+            stash=""
+        fi
+	
+        repo=$(git branch | grep -e "^\*"| awk '{print $2}')
+        gitpart="-[$repo | ~$mod +$add -$del$stash$rstat$submodule_info ]"
+    fi
+
+
+    PS1="\n$COLORPS\u@\h$COLORPS-[$BOLD$AZURE\w$COLORPS]$gitpart-$NOC$PROMPT "
+
+}
