@@ -1,3 +1,4 @@
+export PROMPT_COMMAND="create_prompt"
 ## Customization
 # COLORS
 NOC="\[\e[0m\]"
