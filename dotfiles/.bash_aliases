@@ -1,0 +1,1 @@
+/home/hodor/.bash_aliases
