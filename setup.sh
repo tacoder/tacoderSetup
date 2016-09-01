@@ -12,8 +12,7 @@ do
       echo "$entry"
       cp ~/$entry dotfiles/"$entry"_backup
       mv -f dotfiles/$entry ~/$entry
-      sudo ln --symbolic -T ~/$entry dotfiles/$entry
-
+      sudo ln --symbolic -T ~dotfiles/$entry /$entry 
 done
 
 
