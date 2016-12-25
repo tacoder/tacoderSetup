@@ -122,5 +122,5 @@ fi
 
 
 PATH=$PATH:~/secure/Programs/node-v6.2.0-linux-x64/bin
-alias spring="nohup /home/hodor/secure/Programs/sts-bundle/sts-3.7.3.RELEASE/STS > /dev/null &"
-export JAVA_HOME="/home/hodor/secure/Programs/jdk1.8.0_65"
+alias spring="nohup /home/$USER/secure/Programs/sts-bundle/sts-3.7.3.RELEASE/STS > /dev/null &"
+export JAVA_HOME="/home/$USER/secure/Programs/jdk1.8.0_65"
