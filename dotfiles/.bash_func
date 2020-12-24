@@ -30,6 +30,26 @@ HBLUE="\[[94m\]"
 HPINK="\[[95m\]"
 HAZURE="\[[96m\]"
 
+compileAndRun () {( set -e
+toilet -f term -F border  --gay "< :D > Abhinav's super duper fun c++ executor 9000"
+        FILE=$1.in
+        toilet -f term -F border --gay  "Compiling $1!"
+        #echo -e "Compiling!\n------"
+        g++ $1 -o $1.out
+        #echo -e "-----\n Compilation done!\n-----\nRunning code below"
+        if [ -f "$FILE" ]; then
+                toilet -f term -F border --gay "Compilation done, Running code below using input file $FILE"
+            #echo -e "using input file $FILE exists.\n-----\n"
+            ./$1.out < $1.in
+        else
+                toilet -f term -F border --gay "Compilation done, Running code below without any input"
+            #echo -e "input file $FILE does not exist.\n-----\n"
+            ./$1.out
+        fi
+        echo ""
+        toilet -f term -F border --gay "Done"
+          #echo -e"\n-----Done-----"
+        )}
 
 function create_prompt {
 
